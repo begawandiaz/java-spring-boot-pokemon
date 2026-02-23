@@ -1,0 +1,23 @@
+cat > .gitignore << 'EOF'
+# Java
+*.class
+*.jar
+*.war
+*.ear
+hs_err_pid*
+
+# Build tools
+/target/
+/build/
+/out/
+
+# IntelliJ
+.idea/
+*.iml
+
+# VS Code
+.vscode/
+
+# Mac
+.DS_Store
+EOF
