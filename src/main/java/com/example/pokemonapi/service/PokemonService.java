@@ -2,35 +2,32 @@ package com.example.pokemonapi.service;
 
 import com.example.pokemonapi.exception.PokemonNotFoundException;
 import com.example.pokemonapi.model.Pokemon;
-import jakarta.annotation.PostConstruct;
+import com.example.pokemonapi.repository.PokemonRepository;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ConcurrentHashMap;
 import org.springframework.stereotype.Service;
 
 @Service
 public class PokemonService {
 
-    private final Map<Long, Pokemon> pokemonStore = new ConcurrentHashMap<>();
+    private final PokemonRepository pokemonRepository;
 
-    @PostConstruct
-    public void seedData() {
-        pokemonStore.put(1L, new Pokemon(1L, "Bulbasaur", "Grass/Poison", 5));
-        pokemonStore.put(2L, new Pokemon(2L, "Charmander", "Fire", 5));
-        pokemonStore.put(3L, new Pokemon(3L, "Squirtle", "Water", 5));
+    public PokemonService(PokemonRepository pokemonRepository) {
+        this.pokemonRepository = pokemonRepository;
     }
 
     public List<Pokemon> getAllPokemon() {
-        return new ArrayList<>(pokemonStore.values());
+        return new ArrayList<>(pokemonRepository.findAll());
     }
 
     public Pokemon getPokemonById(Long id) {
-        Pokemon pokemon = pokemonStore.get(id);
-        if (pokemon == null) {
-            throw new PokemonNotFoundException(id);
-        }
-        return pokemon;
+        // SQL explanation:
+        // This service method calls `findByIdNative(id)` from the repository.
+        // That repository method executes this SQL on PostgreSQL:
+        // SELECT id, name, type, level FROM pokemon WHERE id = :id
+        // If no row matches, Optional is empty and we throw 404 via PokemonNotFoundException.
+        return pokemonRepository.findByIdNative(id)
+                .orElseThrow(() -> new PokemonNotFoundException(id));
     }
 
     public Pokemon updatePokemon(Long id, Pokemon updateRequest) {
@@ -46,13 +43,13 @@ public class PokemonService {
             existingPokemon.setLevel(updateRequest.getLevel());
         }
 
-        pokemonStore.put(id, existingPokemon);
-        return existingPokemon;
+        return pokemonRepository.save(existingPokemon);
     }
 
     public void deletePokemon(Long id) {
-        if (pokemonStore.remove(id) == null) {
+        if (!pokemonRepository.existsById(id)) {
             throw new PokemonNotFoundException(id);
         }
+        pokemonRepository.deleteById(id);
     }
 }

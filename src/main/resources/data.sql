@@ -1,0 +1,10 @@
+INSERT INTO pokemon (name, type, level) VALUES ('Bulbasaur', 'Grass/Poison', 5);
+INSERT INTO pokemon (name, type, level) VALUES ('Ivysaur', 'Grass/Poison', 16);
+INSERT INTO pokemon (name, type, level) VALUES ('Venusaur', 'Grass/Poison', 32);
+INSERT INTO pokemon (name, type, level) VALUES ('Charmander', 'Fire', 5);
+INSERT INTO pokemon (name, type, level) VALUES ('Charmeleon', 'Fire', 16);
+INSERT INTO pokemon (name, type, level) VALUES ('Charizard', 'Fire/Flying', 36);
+INSERT INTO pokemon (name, type, level) VALUES ('Squirtle', 'Water', 5);
+INSERT INTO pokemon (name, type, level) VALUES ('Wartortle', 'Water', 16);
+INSERT INTO pokemon (name, type, level) VALUES ('Blastoise', 'Water', 36);
+INSERT INTO pokemon (name, type, level) VALUES ('Pikachu', 'Electric', 18);
